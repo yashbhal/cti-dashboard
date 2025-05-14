@@ -1,148 +1,135 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Search } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
-  TableHead,
-  TableRow,
-  TableHeaderCell,
   TableBody,
   TableCell,
-  Text,
-  Badge,
-  TextInput,
-  Select,
-  SelectItem,
-  Card,
-} from '@tremor/react';
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { ThreatIndicator } from '@/types/threat';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
 interface ThreatTableProps {
   threats: ThreatIndicator[];
 }
 
 export default function ThreatTable({ threats = [] }: ThreatTableProps) {
-  const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [severityFilter, setSeverityFilter] = useState('all');
-
-  const types = Array.from(new Set(threats.map(threat => threat.type)));
-  const severities = ['Critical', 'High', 'Medium', 'Low'];
-
-  const filteredThreats = threats.filter(threat => {
-    const matchesSearch = 
-      threat.indicator.toLowerCase().includes(search.toLowerCase()) ||
-      threat.tags.some(tag => tag.toLowerCase().includes(search.toLowerCase()));
-    
-    const matchesType = typeFilter === 'all' || threat.type === typeFilter;
-    const matchesSeverity = severityFilter === 'all' || threat.severity === severityFilter;
-
-    return matchesSearch && matchesType && matchesSeverity;
-  });
-
-  const severityColors: Record<string, string> = {
-    Critical: 'rose',
-    High: 'orange',
-    Medium: 'yellow',
-    Low: 'emerald',
-  };
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSeverity, setSelectedSeverity] = useState('all');
 
   if (!threats?.length) {
     return (
       <Card className="p-6">
-        <div className="h-32 flex items-center justify-center">
-          <Text>No threat data available</Text>
+        <div className="flex flex-col space-y-2">
+          <h3 className="font-semibold text-lg">Recent Threats</h3>
+          <div className="h-64 flex items-center justify-center text-muted-foreground">
+            <p>No threat data available</p>
+          </div>
         </div>
       </Card>
     );
   }
 
-  return (
-    <Card className="p-6">
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <TextInput
-          icon={MagnifyingGlassIcon}
-          placeholder="Search by indicator or tags..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="md:w-96"
-        />
-        <Select
-          value={typeFilter}
-          onValueChange={setTypeFilter}
-          placeholder="Filter by type"
-          className="md:w-48"
-        >
-          <SelectItem value="all">All Types</SelectItem>
-          {types.map(type => (
-            <SelectItem key={type} value={type}>{type}</SelectItem>
-          ))}
-        </Select>
-        <Select
-          value={severityFilter}
-          onValueChange={setSeverityFilter}
-          placeholder="Filter by severity"
-          className="md:w-48"
-        >
-          <SelectItem value="all">All Severities</SelectItem>
-          {severities.map(severity => (
-            <SelectItem key={severity} value={severity}>{severity}</SelectItem>
-          ))}
-        </Select>
-      </div>
+  const types = Array.from(new Set(threats.map(threat => threat.type)));
+  const severities = ['Critical', 'High', 'Medium', 'Low'];
 
-      {filteredThreats.length === 0 ? (
-        <div className="h-32 flex items-center justify-center border-2 border-dashed rounded-tremor-default">
-          <Text>No threats match your filters</Text>
+  const filteredThreats = threats.filter(threat => {
+    const matchesSearch = threat.indicator.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         threat.type.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSeverity = selectedSeverity === 'all' || threat.severity === selectedSeverity;
+    return matchesSearch && matchesSeverity;
+  });
+
+  const getSeverityVariant = (severity: string) => {
+    switch (severity) {
+      case 'Critical':
+        return 'danger';
+      case 'High':
+        return 'warning';
+      case 'Medium':
+        return 'info';
+      default:
+        return 'success';
+    }
+  };
+
+  return (
+    <Card>
+      <div className="p-6 space-y-6">
+        <div className="flex flex-col space-y-2">
+          <h3 className="font-semibold text-lg">Recent Threats</h3>
+          <p className="text-sm text-muted-foreground">
+            Browse and filter recent cyber threat indicators.
+          </p>
         </div>
-      ) : (
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Indicator</TableHeaderCell>
-              <TableHeaderCell>Type</TableHeaderCell>
-              <TableHeaderCell>First Seen</TableHeaderCell>
-              <TableHeaderCell>Severity</TableHeaderCell>
-              <TableHeaderCell>Tags</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredThreats.map((threat, idx) => (
-              <TableRow key={`${threat.indicator}-${idx}`} className="hover:bg-gray-50 dark:hover:bg-gray-800">
-                <TableCell>
-                  <Text className="font-medium">{threat.indicator}</Text>
-                </TableCell>
-                <TableCell>
-                  <Text>{threat.type}</Text>
-                </TableCell>
-                <TableCell>
-                  <Text>{new Date(threat.first_seen).toLocaleDateString()}</Text>
-                </TableCell>
-                <TableCell>
-                  <Badge color={severityColors[threat.severity]} size="xl">
-                    {threat.severity}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-2 flex-wrap">
-                    {threat.tags.slice(0, 3).map((tag, tagIdx) => (
-                      <Badge key={`${tag}-${tagIdx}`} color="blue" size="sm">
-                        {tag}
-                      </Badge>
-                    ))}
-                    {threat.tags.length > 3 && (
-                      <Badge color="gray" size="sm">
-                        +{threat.tags.length - 3}
-                      </Badge>
-                    )}
-                  </div>
-                </TableCell>
+
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search threats..."
+              value={searchQuery}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <Select
+            value={selectedSeverity}
+            onValueChange={setSelectedSeverity}
+          >
+            <SelectTrigger className="w-full md:w-[180px]">
+              <SelectValue placeholder="All Severities" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Severities</SelectItem>
+              <SelectItem value="Critical">Critical</SelectItem>
+              <SelectItem value="High">High</SelectItem>
+              <SelectItem value="Medium">Medium</SelectItem>
+              <SelectItem value="Low">Low</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Indicator</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Severity</TableHead>
+                <TableHead>Source</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+            </TableHeader>
+            <TableBody>
+              {filteredThreats.map((threat, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{threat.indicator}</TableCell>
+                  <TableCell>{threat.type}</TableCell>
+                  <TableCell>
+                    <Badge variant={getSeverityVariant(threat.severity)}>
+                      {threat.severity}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{threat.source}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
     </Card>
   );
 }
