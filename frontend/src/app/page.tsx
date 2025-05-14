@@ -1,40 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, Title } from '@tremor/react';
+import { Header } from '@/components/ui/header';
 import ThreatTable from '@/components/ThreatTable';
 import ThreatCharts from '@/components/ThreatCharts';
-import { ThreatIndicator } from '@/types/threat';
+import { mockThreats } from '@/data/mockThreats';
 
 export default function Home() {
-  const [threats, setThreats] = useState<ThreatIndicator[]>([]);
-
-  useEffect(() => {
-    const fetchThreats = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/api/threats');
-        const data = await response.json();
-        setThreats(data);
-      } catch (error) {
-        console.error('Error fetching threats:', error);
-      }
-    };
-
-    fetchThreats();
-  }, []);
-
   return (
-    <main className="p-4 md:p-10 mx-auto max-w-7xl">
-      <Title className="mb-6">Cyber Threat Intelligence Dashboard</Title>
-      
-      <div className="mb-8">
-        <ThreatCharts threats={threats} />
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <div className="container mx-auto py-6 space-y-8">
+          <div className="flex flex-col space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight">Threat Intelligence</h1>
+            <p className="text-muted-foreground">Monitor and analyze cyber threats in real-time.</p>
+          </div>
 
-      <Card>
-        <Title>Threat Indicators</Title>
-        <ThreatTable threats={threats} />
-      </Card>
-    </main>
+          <div className="grid gap-6">
+            <ThreatCharts threats={mockThreats} />
+            <ThreatTable threats={mockThreats} />
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }
