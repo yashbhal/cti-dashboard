@@ -1,6 +1,6 @@
 # Cyber Threat Intelligence Dashboard
 
-![Dashboard Preview](https://via.placeholder.com/800x450/0f172a/818cf8?text=CTI+Dashboard)
+![Dashboard Preview](cti-dash-demo.gif)
 
 A modern, full-stack web application that aggregates and visualizes Cyber Threat Intelligence (CTI) data from AlienVault OTX. Built with a professional dark-mode design focusing on usability, efficient data presentation, and subtle animations for an enhanced user experience.
 
