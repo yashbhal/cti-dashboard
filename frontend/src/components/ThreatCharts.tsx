@@ -123,95 +123,158 @@ export default function ThreatCharts({ threats = [], className }: ThreatChartsPr
   return (
     <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-6", className)}>
       {/* Donut Chart for Threat Types */}
-      <Card className="bg-gray-900 border-gray-800 shadow-md shadow-black/10 p-6 relative overflow-hidden">
-        <div className="flex flex-col space-y-1">
-          <Title className="text-lg font-medium text-white">Threat Types Distribution</Title>
-          <Text className="text-xs text-gray-400">Breakdown of threat indicators by type</Text>
-        </div>
-        
-        <div className="relative h-[250px] mt-4">
-          <DonutChart
-            data={typeData}
-            category="count"
-            index="name"
-            colors={typeData.map(d => typeColorsMap[d.name] || typeColorsMap.default)}
-            className="h-full w-full text-white"
-            showAnimation
-            animationDuration={800}
-            valueFormatter={(value) => `${value} (${((value / threats.length) * 100).toFixed(1)}%)`}
-            noDataText="No data available"
-          />
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span className="text-xs text-gray-400 bg-gray-800/80 px-2 py-1 rounded-md border border-gray-700/50">
-              Total: {threats.length}
-            </span>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <Card className="bg-gray-900 border-gray-800 shadow-md shadow-black/10 p-6 relative overflow-hidden card-hover subtle-glow">
+          <div className="flex flex-col space-y-1">
+            <Title className="text-lg font-medium text-white text-glow">Threat Types Distribution</Title>
+            <Text className="text-xs text-gray-400">Breakdown of threat indicators by type</Text>
           </div>
-        </div>
-        
-        <div className="mt-4 max-h-[120px] overflow-y-auto pr-2 custom-scrollbar">
-          <Legend
-            categories={typeData.map(d => `${d.name} (${d.count})`)}
-            colors={typeData.map(d => typeColorsMap[d.name] || typeColorsMap.default)}
-            className="text-gray-300 text-sm"
-          />
-        </div>
-      </Card>
+          
+          <div className="relative h-[250px] mt-4">
+            <DonutChart
+              data={typeData}
+              category="count"
+              index="name"
+              colors={typeData.map(d => typeColorsMap[d.name] || typeColorsMap.default)}
+              className="h-full w-full text-white"
+              showAnimation
+              animationDuration={1200}
+              valueFormatter={(value) => `${value} (${((value / threats.length) * 100).toFixed(1)}%)`}
+              noDataText="No data available"
+            />
+            <motion.div 
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+            >
+              <span className="text-xs text-gray-300 bg-gray-800/80 px-3 py-1.5 rounded-md border border-indigo-500/20 shadow-sm shadow-indigo-500/10">
+                Total: {threats.length}
+              </span>
+            </motion.div>
+          </div>
+          
+          <motion.div 
+            className="mt-4 max-h-[120px] overflow-y-auto pr-2 custom-scrollbar"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.5 }}
+          >
+            <Legend
+              categories={typeData.map(d => `${d.name} (${d.count})`)}
+              colors={typeData.map(d => typeColorsMap[d.name] || typeColorsMap.default)}
+              className="text-gray-300 text-sm"
+            />
+          </motion.div>
+        </Card>
+      </motion.div>
       
       {/* Threat Stats Card */}
-      <Card className="bg-gray-900 border-gray-800 shadow-md shadow-black/10 p-6 relative overflow-hidden">
-        <div className="flex flex-col space-y-1">
-          <Title className="text-lg font-medium text-white">Threat Intelligence Summary</Title>
-          <Text className="text-xs text-gray-400">Key metrics and severity breakdown</Text>
-        </div>
-        
-        {/* Threat Stats Grid */}
-        <div className="grid grid-cols-2 gap-4 mt-6">
-          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center">
-            <div className="text-3xl font-bold text-white">{threats.length}</div>
-            <div className="text-sm text-gray-400 mt-1">Total Indicators</div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+      >
+        <Card className="bg-gray-900 border-gray-800 shadow-md shadow-black/10 p-6 relative overflow-hidden card-hover subtle-glow">
+          <div className="flex flex-col space-y-1">
+            <Title className="text-lg font-medium text-white text-glow">Threat Intelligence Summary</Title>
+            <Text className="text-xs text-gray-400">Key metrics and severity breakdown</Text>
           </div>
           
-          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center">
-            <div className="text-3xl font-bold text-white">{typeData.length}</div>
-            <div className="text-sm text-gray-400 mt-1">Unique Types</div>
-          </div>
-          
-          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center">
-            <div className="text-3xl font-bold text-emerald-400">
-              {severityData.find(d => d.severity === 'Low')?.["Low"] || 0}
-            </div>
-            <div className="text-sm text-gray-400 mt-1">Low Severity</div>
-          </div>
-          
-          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center">
-            <div className="text-3xl font-bold text-amber-400">
-              {severityData.find(d => d.severity === 'Medium')?.["Medium"] || 0}
-            </div>
-            <div className="text-sm text-gray-400 mt-1">Medium Severity</div>
-          </div>
-        </div>
-        
-        {/* Top Threat Types */}
-        <div className="mt-6">
-          <Text className="text-sm font-medium text-white mb-3">Top Threat Types</Text>
-          <div className="space-y-2">
-            {typeData.slice(0, 4).map((type, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div 
-                    className="w-3 h-3 rounded-full mr-2" 
-                    style={{ backgroundColor: `var(--tremor-${typeColorsMap[type.name] || typeColorsMap.default}-500)` }}
-                  />
-                  <Text className="text-sm text-gray-300">{type.name}</Text>
-                </div>
-                <Text className="text-sm text-gray-400">{type.count}</Text>
+          {/* Threat Stats Grid */}
+          <div className="grid grid-cols-2 gap-4 mt-6">
+            <motion.div 
+              className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center hover:border-indigo-500/30 transition-colors duration-300"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              whileHover={{ y: -2 }}
+            >
+              <div className="text-3xl font-bold text-white">{threats.length}</div>
+              <div className="text-sm text-gray-400 mt-1">Total Indicators</div>
+            </motion.div>
+            
+            <motion.div 
+              className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center hover:border-indigo-500/30 transition-colors duration-300"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              whileHover={{ y: -2 }}
+            >
+              <div className="text-3xl font-bold text-white">{typeData.length}</div>
+              <div className="text-sm text-gray-400 mt-1">Unique Types</div>
+            </motion.div>
+            
+            <motion.div 
+              className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center hover:border-emerald-500/30 transition-colors duration-300"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              whileHover={{ y: -2 }}
+            >
+              <div className="text-3xl font-bold text-emerald-400">
+                {severityData.find(d => d.severity === 'Low')?.["Low"] || 0}
               </div>
-            ))}
+              <div className="text-sm text-gray-400 mt-1">Low Severity</div>
+            </motion.div>
+            
+            <motion.div 
+              className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center hover:border-amber-500/30 transition-colors duration-300"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              whileHover={{ y: -2 }}
+            >
+              <div className="text-3xl font-bold text-amber-400">
+                {severityData.find(d => d.severity === 'Medium')?.["Medium"] || 0}
+              </div>
+              <div className="text-sm text-gray-400 mt-1">Medium Severity</div>
+            </motion.div>
           </div>
-        </div>
-        
-        <Text className="mt-6 text-gray-400 text-xs">Data refreshed: {new Date().toLocaleString()}</Text>
-      </Card>
+          
+          {/* Top Threat Types */}
+          <motion.div 
+            className="mt-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.5 }}
+          >
+            <Text className="text-sm font-medium text-white mb-3">Top Threat Types</Text>
+            <div className="space-y-2">
+              {typeData.slice(0, 4).map((type, index) => (
+                <motion.div 
+                  key={index} 
+                  className="flex items-center justify-between p-2 rounded-md hover:bg-gray-800/50 transition-colors duration-200"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.8 + (index * 0.1), duration: 0.3 }}
+                >
+                  <div className="flex items-center">
+                    <div 
+                      className="w-3 h-3 rounded-full mr-2 status-pulse" 
+                      style={{ backgroundColor: `var(--tremor-${typeColorsMap[type.name] || typeColorsMap.default}-500)` }}
+                    />
+                    <Text className="text-sm text-gray-300">{type.name}</Text>
+                  </div>
+                  <Text className="text-sm text-gray-400">{type.count}</Text>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.5 }}
+          >
+            <Text className="mt-6 text-gray-400 text-xs refresh-pulse">Data refreshed: {new Date().toLocaleString()}</Text>
+          </motion.div>
+        </Card>
+      </motion.div>
     </div>
   );
 }

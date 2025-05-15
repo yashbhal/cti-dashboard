@@ -1,4 +1,5 @@
 import './globals.css';
+import './animations.css';
 import { type Metadata } from 'next';
 import { type ReactNode } from 'react';
 import { JetBrains_Mono } from 'next/font/google';
@@ -34,19 +35,24 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning className={jetbrainsMono.variable}>
       <head />
       <body className={cn(
-        'min-h-screen antialiased',
+        'min-h-screen antialiased custom-scrollbar',
         'bg-gray-950 text-white',
         'relative overflow-x-hidden',
-        'before:fixed before:left-0 before:top-0 before:h-full before:w-full before:bg-gradient-to-b before:from-gray-900 before:to-gray-950 before:content-[""]'
+        'animated-gradient'
       )}>
-        {/* Glowing Lines */}
-        <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-800 to-transparent opacity-30" />
-        <div className="fixed top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-gray-800 to-transparent opacity-30" />
+        {/* Subtle background elements */}
+        <div className="fixed inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.02] pointer-events-none" />
+        <div className="fixed top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
+        <div className="fixed bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
         
         {/* Main Content */}
         <div className="relative z-10 flex min-h-screen flex-col">
           <div className="mx-auto w-full max-w-7xl p-4 md:p-6 lg:p-8">
-            <div className="relative bg-gray-950 rounded-lg border border-gray-800 shadow-lg shadow-black/20">
+            <div className="relative bg-gray-950/80 backdrop-blur-sm rounded-lg border border-gray-800/80 shadow-lg shadow-black/20 overflow-hidden">
+              {/* Subtle corner accents */}
+              <div className="absolute top-0 left-0 w-24 h-24 bg-indigo-500/5 rounded-br-full" />
+              <div className="absolute bottom-0 right-0 w-24 h-24 bg-purple-500/5 rounded-tl-full" />
+              
               {children}
             </div>
           </div>
