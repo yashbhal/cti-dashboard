@@ -35,21 +35,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body className={cn(
         'min-h-screen antialiased',
-        'bg-[#0a0a0f] text-[#00ff9d]',
+        'bg-gray-950 text-white',
         'relative overflow-x-hidden',
-        'before:fixed before:left-0 before:top-0 before:h-full before:w-full before:bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,157,0.05),rgba(17,17,25,0.9))] before:content-[""]'
+        'before:fixed before:left-0 before:top-0 before:h-full before:w-full before:bg-gradient-to-b before:from-gray-900 before:to-gray-950 before:content-[""]'
       )}>
-        {/* Cyberpunk Grid Effect */}
-        <div className="fixed inset-0 bg-[linear-gradient(transparent_1px,#0a0a0f_1px),linear-gradient(90deg,transparent_1px,#0a0a0f_1px)] bg-[size:30px_30px] [background-position:center] opacity-20 pointer-events-none" />
-        
         {/* Glowing Lines */}
-        <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00ff9d] to-transparent opacity-30" />
-        <div className="fixed top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-[#00ff9d] to-transparent opacity-30" />
+        <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-800 to-transparent opacity-30" />
+        <div className="fixed top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-gray-800 to-transparent opacity-30" />
         
         {/* Main Content */}
         <div className="relative z-10 flex min-h-screen flex-col">
           <div className="mx-auto w-full max-w-7xl p-4 md:p-6 lg:p-8">
-            <div className="relative backdrop-blur-sm bg-black/30 rounded-lg border border-[#00ff9d]/10 shadow-lg shadow-[#00ff9d]/5">
+            <div className="relative bg-gray-950 rounded-lg border border-gray-800 shadow-lg shadow-black/20">
               {children}
             </div>
           </div>

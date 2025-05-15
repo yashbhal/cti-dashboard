@@ -31,7 +31,7 @@ export function DashboardHeader({
 }: DashboardHeaderProps) {
   return (
     <div className={cn("flex flex-col items-center text-center space-y-3 mb-8", className)}>
-      <h1 className="text-3xl md:text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 pb-1">
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400 pb-1">
         {title}
       </h1>
       {description && (

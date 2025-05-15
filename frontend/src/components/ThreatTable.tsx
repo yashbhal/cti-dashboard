@@ -24,9 +24,9 @@ export default function ThreatTable({ threats = [], className }: ThreatTableProp
 
   if (!threats?.length) {
     return (
-      <Card className={cn("overflow-hidden bg-gray-900 border-gray-800 shadow-lg shadow-black/5", className)}>
+      <Card className={cn("overflow-hidden bg-gray-900 border-gray-800 shadow-md shadow-black/10 w-full", className)}>
         <CardHeader>
-          <CardTitle className="text-xl font-medium flex items-center gap-2">
+          <CardTitle className="text-xl font-medium text-white flex items-center gap-2">
             Recent Threats
           </CardTitle>
           <CardDescription className="text-gray-400">
@@ -34,10 +34,8 @@ export default function ThreatTable({ threats = [], className }: ThreatTableProp
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-64 flex flex-col items-center justify-center text-gray-400 gap-4">
-            <div className="rounded-full bg-gray-800 p-4">
-              <AlertCircle className="h-8 w-8 text-gray-400" />
-            </div>
+          <div className="flex flex-col items-center justify-center h-[300px] text-gray-400">
+            <AlertCircle className="h-8 w-8 mb-4" />
             <p className="text-sm">No threat data available</p>
           </div>
         </CardContent>
@@ -45,17 +43,28 @@ export default function ThreatTable({ threats = [], className }: ThreatTableProp
     );
   }
 
-  const types = Array.from(new Set(threats.map(threat => threat.type)));
-  const severities = ['Critical', 'High', 'Medium', 'Low'];
-
+  // Filter threats based on search query and selected severity
   const filteredThreats = threats.filter(threat => {
     const matchesSearch = threat.indicator.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         threat.type.toLowerCase().includes(searchQuery.toLowerCase());
+      threat.type.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesSeverity = selectedSeverity === 'all' || threat.severity === selectedSeverity;
     return matchesSearch && matchesSeverity;
   });
 
-  const getSeverityVariant = (severity: string) => {
+  const getTypeBadgeVariant = (type: string) => {
+    switch (type) {
+      case 'Malware':
+        return 'destructive';
+      case 'Phishing':
+        return 'warning';
+      case 'Ransomware':
+        return 'secondary';
+      default:
+        return 'outline';
+    }
+  };
+
+  const getSeverityBadgeVariant = (severity: string) => {
     switch (severity) {
       case 'Critical':
         return 'destructive';
@@ -67,53 +76,38 @@ export default function ThreatTable({ threats = [], className }: ThreatTableProp
         return 'outline';
     }
   };
-  
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'Critical':
-        return 'text-red-300 bg-red-500/20 border-red-500/30';
-      case 'High':
-        return 'text-amber-300 bg-amber-500/20 border-amber-500/30';
-      case 'Medium':
-        return 'text-blue-300 bg-blue-500/20 border-blue-500/30';
-      default:
-        return 'text-green-300 bg-green-500/20 border-green-500/30';
-    }
-  };
 
   return (
-    <div className={cn("space-y-6", className)}>
-      {/* Filter Card */}
-      <Card className="overflow-hidden bg-gray-900 border-gray-800 shadow-lg shadow-black/5">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-medium flex items-center gap-2">
-            <Filter className="h-4 w-4 text-indigo-500" />
-            Search & Filters
-          </CardTitle>
-          <CardDescription className="text-gray-400">
-            Filter threats by keyword or severity level
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-4 space-y-4 sm:space-y-0 sm:flex sm:items-center sm:gap-4">
-          <div className="relative flex-1">
+    <Card className={cn("overflow-hidden bg-gray-900 border-gray-800 shadow-md shadow-black/10 w-full", className)}>
+      {/* Filters Card */}
+      <CardHeader className="pb-2 md:pb-4">
+        <CardTitle className="text-xl font-medium text-white flex items-center gap-2">
+          Recent Threats
+        </CardTitle>
+        <CardDescription className="text-gray-400 text-sm md:text-base">
+          Browse and filter recent cyber threat indicators.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6 p-4 md:p-6">
+        {/* Search & Filters */}
+        <div className="flex flex-col md:flex-row gap-4 items-center bg-gray-900/95 border border-gray-800 p-4 rounded-lg shadow-sm shadow-black/5 transition-all duration-200 hover:shadow-black/10 hover:border-indigo-500/30 w-full">
+          <div className="relative flex-1 w-full md:w-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search threats..."
               value={searchQuery}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-gray-800 border-gray-700 focus:border-indigo-500/50 focus:ring-indigo-500/20 transition-colors text-white"
+              onChange={e => setSearchQuery(e.target.value)}
+              className="pl-8 bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus-visible:ring-indigo-500/50 w-full"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <Select
-              value={selectedSeverity}
-              onValueChange={setSelectedSeverity}
-            >
-              <SelectTrigger className="w-full bg-gray-800 border-gray-700 focus:border-indigo-500/50 focus:ring-indigo-500/20 transition-colors text-white">
-                <SelectValue placeholder="All Severities" />
+          <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+            <Filter className="h-4 w-4 text-gray-400" />
+            <Select value={selectedSeverity} onValueChange={setSelectedSeverity}>
+              <SelectTrigger className="w-[120px] md:w-[140px] bg-gray-800 border-gray-700 text-white focus:ring-indigo-500/50">
+                <SelectValue placeholder="Severity" />
               </SelectTrigger>
-              <SelectContent className="bg-gray-900 border-gray-800 text-white">
-                <SelectItem value="all">All Severities</SelectItem>
+              <SelectContent className="bg-gray-800 border-gray-700 text-white">
+                <SelectItem value="all">All Severity</SelectItem>
                 <SelectItem value="Critical">Critical</SelectItem>
                 <SelectItem value="High">High</SelectItem>
                 <SelectItem value="Medium">Medium</SelectItem>
@@ -121,79 +115,47 @@ export default function ThreatTable({ threats = [], className }: ThreatTableProp
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
-      </Card>
-      
-      {/* Table Card */}
-      <Card className="overflow-hidden bg-gray-900 border-gray-800 shadow-lg shadow-black/5">
-        <CardHeader>
-          <CardTitle className="text-xl font-medium flex items-center gap-2">
-            Recent Threats
-          </CardTitle>
-          <CardDescription className="text-gray-400">
-            Browse and filter recent cyber threat indicators.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+        </div>
 
-        <div className="rounded-md border border-gray-800 overflow-hidden overflow-x-auto">
+        <div className="rounded-md border border-gray-800 overflow-hidden overflow-x-auto w-full">
           <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-800/50 hover:bg-gray-800/50">
-                <TableHead className="font-medium text-white sticky top-0">Indicator</TableHead>
-                <TableHead className="font-medium text-white sticky top-0">Type</TableHead>
-                <TableHead className="font-medium text-white sticky top-0">Severity</TableHead>
-                <TableHead className="font-medium text-white sticky top-0">Source</TableHead>
+            <TableHeader className="bg-gray-800/50">
+              <TableRow>
+                <TableHead className="text-gray-400 text-sm md:text-base">Indicator</TableHead>
+                <TableHead className="text-gray-400 text-sm md:text-base">Type</TableHead>
+                <TableHead className="text-gray-400 text-sm md:text-base">Severity</TableHead>
+                <TableHead className="text-gray-400 text-sm md:text-base">Description</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredThreats.length > 0 ? (
-                filteredThreats.map((threat, index) => (
-                  <TableRow 
-                    key={index} 
-                    className={cn(
-                      "transition-colors hover:bg-gray-800/70",
-                      index % 2 === 0 ? "bg-transparent" : "bg-gray-800/30"
-                    )}
-                  >
-                    <TableCell className="font-medium text-white">{threat.indicator}</TableCell>
+              {filteredThreats.length ? (
+                filteredThreats.map((threat: ThreatIndicator, index: number) => (
+                  <TableRow key={index} className="border-gray-800 hover:bg-gray-800/30 transition-colors duration-200">
+                    <TableCell className="font-medium text-white text-sm md:text-base">{threat.value}</TableCell>
                     <TableCell>
-                      <span className="inline-flex items-center rounded-full px-2 py-1 text-xs bg-indigo-500/20 text-indigo-300">
+                      <Badge variant={getTypeBadgeVariant(threat.type)} className="bg-opacity-30 text-white border-0 px-2 py-0.5 text-xs md:text-sm font-normal rounded-full hover:bg-opacity-40 transition-colors duration-200">
                         {threat.type}
-                      </span>
+                      </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge 
-                        variant="outline"
-                        className={cn("font-medium", getSeverityColor(threat.severity))}
-                      >
+                      <Badge variant={getSeverityBadgeVariant(threat.severity)} className="bg-opacity-30 text-white border-0 px-2 py-0.5 text-xs md:text-sm font-normal rounded-full hover:bg-opacity-40 transition-colors duration-200">
                         {threat.severity}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-gray-400">{threat.source}</TableCell>
+                    <TableCell className="text-gray-400 text-sm md:text-base">{threat.description || '-'}</TableCell>
                   </TableRow>
                 ))
               ) : (
-                <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center">
-                    <div className="flex flex-col items-center justify-center gap-2 text-gray-400">
-                      <Search className="h-4 w-4" />
-                      <p className="text-sm">No results found</p>
-                    </div>
+                <TableRow className="border-gray-800 hover:bg-gray-800/30 transition-colors duration-200">
+                  <TableCell colSpan={4} className="h-24 text-center text-gray-400 text-sm md:text-base">
+                    No matching threats found
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </div>
-        
-        {filteredThreats.length > 0 && (
-          <div className="text-xs text-gray-400 text-center pt-2">
-            Showing {filteredThreats.length} of {threats.length} threats
-          </div>
-        )}
       </CardContent>
     </Card>
-    </div>
   );
 }

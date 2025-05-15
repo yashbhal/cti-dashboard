@@ -5,12 +5,37 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Professional cybersecurity dashboard colors */
+  --charcoal: #111827;
+  --dark-gray: #1f2937;
+  --medium-gray: #374151;
+  --light-gray: #4b5563;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  
+  /* Accent colors - soft indigo/purple */
+  --accent-indigo: #6366f1;
+  --accent-purple: #8b5cf6;
+  
+  /* Status colors - desaturated */
+  --status-critical: #ef4444;
+  --status-high: #f59e0b;
+  --status-medium: #eab308;
+  --status-low: #10b981;
+  
+  /* Chart colors - softer */
+  --chart-purple: #8b5cf6;
+  --chart-teal: #2dd4bf;
+  --chart-blue: #60a5fa;
+  --chart-indigo: #818cf8;
+  --chart-violet: #a78bfa;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #030712;
+    --foreground: #ffffff;
   }
 }
 
@@ -21,44 +46,76 @@ html.dark {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: all 0.2s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border-color: rgba(99, 102, 241, 0.3);
 }
 
 /* Tremor dark mode overrides */
 .dark .tremor-background-muted {
-  background-color: #1f2937 !important;
+  background-color: var(--dark-gray) !important;
 }
 
 .dark .tremor-border {
-  border-color: #374151 !important;
+  border-color: var(--medium-gray) !important;
 }
 
 .dark .tremor-content-emphasis {
-  color: #e5e7eb !important;
+  color: var(--text-primary) !important;
 }
 
 .dark .tremor-content-strong {
-  color: #f9fafb !important;
+  color: var(--text-primary) !important;
 }
 
 .dark .tremor-content {
-  color: #d1d5db !important;
+  color: var(--text-secondary) !important;
 }
 
 .dark .tremor-content-subtle {
-  color: #9ca3af !important;
+  color: var(--text-secondary) !important;
 }
 
 .dark .tremor-background-subtle {
-  background-color: #1f2937 !important;
+  background-color: var(--dark-gray) !important;
 }
 
 .dark .tremor-background-emphasis {
-  background-color: #1f2937 !important;
+  background-color: var(--dark-gray) !important;
 }
 
 .dark .tremor-ring {
-  border-color: #374151 !important;
+  border-color: var(--medium-gray) !important;
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Subtle transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 
 @layer utilities {
