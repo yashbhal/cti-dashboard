@@ -4,6 +4,82 @@
 
 A modern, full-stack web application that aggregates and visualizes Cyber Threat Intelligence (CTI) data from AlienVault OTX. Built with a professional dark-mode design focusing on usability, efficient data presentation, and subtle animations for an enhanced user experience.
 
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Python 3.8+
+- AlienVault OTX API key ([Get it here](https://otx.alienvault.com/api))
+
+### Installation & Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/cti-dashboard.git
+   cd cti-dashboard
+   ```
+
+2. **Set up the backend**
+   ```bash
+   # Navigate to backend directory
+   cd backend
+   
+   # Create and activate virtual environment
+   python -m venv venv
+   source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+   
+   # Install dependencies
+   pip install -r requirements.txt
+   
+   # Set up environment variables
+   cp .env.example .env
+   # Edit .env and add your OTX API key
+   
+   # Start the backend server
+   cd app
+   uvicorn main:app --reload
+   # Backend will be available at http://localhost:8000
+   ```
+
+3. **Set up the frontend**
+   ```bash
+   # Navigate to frontend directory
+   cd frontend
+   
+   # Install dependencies
+   npm install
+   
+   # Set up environment variables
+   cp .env.example .env.local
+   # The default configuration should work for local development
+   
+   # Start the development server
+   npm run dev
+   # Frontend will be available at http://localhost:3000
+   ```
+
+4. **Access the Dashboard**
+   - Open your browser and navigate to http://localhost:3000
+   - The dashboard should connect to your local backend automatically
+   - If you see no data, verify your OTX API key is correctly set in the backend .env file
+
+### Troubleshooting
+
+- **No data showing up?**
+  - Verify your OTX API key is correct
+  - Check the backend console for any error messages
+  - Ensure both frontend and backend are running
+  
+- **CORS errors in console?**
+  - Make sure you're running the frontend on http://localhost:3000
+  - Verify the backend is running on http://localhost:8000
+  - Check that NEXT_PUBLIC_API_URL is set correctly in frontend .env.local
+
+- **Module not found errors?**
+  - For backend: Make sure you've activated the virtual environment
+  - For frontend: Delete node_modules and run npm install again
+
 ## What It Does
 
 The Cyber Threat Intelligence Dashboard connects to the AlienVault Open Threat Exchange (OTX) API to fetch, process, and visualize real-time threat intelligence data. It provides security professionals with a clear, intuitive interface to monitor, analyze, and respond to emerging cyber threats across various categories including domains, IPs, URLs, file hashes, and more.
