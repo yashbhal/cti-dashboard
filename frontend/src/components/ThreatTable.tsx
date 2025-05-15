@@ -52,28 +52,38 @@ export default function ThreatTable({ threats = [], className }: ThreatTableProp
   });
 
   const getTypeBadgeVariant = (type: string) => {
-    switch (type) {
-      case 'Malware':
-        return 'destructive';
-      case 'Phishing':
-        return 'warning';
-      case 'Ransomware':
-        return 'secondary';
-      default:
-        return 'outline';
-    }
+    const typeMap: Record<string, string> = {
+      'domain': 'indigo',
+      'IPv4': 'cyan',
+      'URL': 'blue',
+      'email': 'purple',
+      'hostname': 'violet',
+      'FileHash-MD5': 'amber',
+      'FileHash-SHA256': 'orange',
+      'CVE': 'rose'
+    };
+    
+    return typeMap[type] || 'outline';
   };
 
   const getSeverityBadgeVariant = (severity: string) => {
-    switch (severity) {
-      case 'Critical':
-        return 'destructive';
-      case 'High':
-        return 'warning';
-      case 'Medium':
-        return 'secondary';
-      default:
-        return 'outline';
+    const severityMap: Record<string, string> = {
+      'Critical': 'destructive',
+      'High': 'warning',
+      'Medium': 'secondary',
+      'Low': 'outline'
+    };
+    
+    return severityMap[severity] || 'outline';
+  };
+  
+  // Format date string to a more readable format
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleString();
+    } catch (e) {
+      return dateString || '-';
     }
   };
 
@@ -124,36 +134,81 @@ export default function ThreatTable({ threats = [], className }: ThreatTableProp
                 <TableHead className="text-gray-400 text-sm md:text-base">Indicator</TableHead>
                 <TableHead className="text-gray-400 text-sm md:text-base">Type</TableHead>
                 <TableHead className="text-gray-400 text-sm md:text-base">Severity</TableHead>
-                <TableHead className="text-gray-400 text-sm md:text-base">Description</TableHead>
+                <TableHead className="text-gray-400 text-sm md:text-base">First Seen</TableHead>
+                <TableHead className="text-gray-400 text-sm md:text-base">Source</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredThreats.length ? (
                 filteredThreats.map((threat: ThreatIndicator, index: number) => (
                   <TableRow key={index} className="border-gray-800 hover:bg-gray-800/30 transition-colors duration-200">
-                    <TableCell className="font-medium text-white text-sm md:text-base">{threat.value}</TableCell>
+                    <TableCell className="font-medium text-white text-sm md:text-base">
+                      <div className="max-w-[200px] truncate" title={threat.indicator}>
+                        {threat.indicator}
+                      </div>
+                    </TableCell>
                     <TableCell>
-                      <Badge variant={getTypeBadgeVariant(threat.type)} className="bg-opacity-30 text-white border-0 px-2 py-0.5 text-xs md:text-sm font-normal rounded-full hover:bg-opacity-40 transition-colors duration-200">
+                      <div 
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs md:text-sm font-normal bg-gray-800 border border-gray-700 text-gray-300`}
+                      >
+                        <span 
+                          className={`w-2 h-2 mr-1.5 rounded-full`}
+                          style={{ backgroundColor: `var(--tremor-${getTypeBadgeVariant(threat.type)}-500)` }}
+                        />
                         {threat.type}
-                      </Badge>
+                      </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={getSeverityBadgeVariant(threat.severity)} className="bg-opacity-30 text-white border-0 px-2 py-0.5 text-xs md:text-sm font-normal rounded-full hover:bg-opacity-40 transition-colors duration-200">
-                        {threat.severity}
-                      </Badge>
+                      <div className="inline-flex items-center">
+                        {threat.severity === 'Critical' && (
+                          <div className="px-2 py-0.5 bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-full text-xs md:text-sm font-normal">
+                            {threat.severity}
+                          </div>
+                        )}
+                        {threat.severity === 'High' && (
+                          <div className="px-2 py-0.5 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full text-xs md:text-sm font-normal">
+                            {threat.severity}
+                          </div>
+                        )}
+                        {threat.severity === 'Medium' && (
+                          <div className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-xs md:text-sm font-normal">
+                            {threat.severity}
+                          </div>
+                        )}
+                        {threat.severity === 'Low' && (
+                          <div className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs md:text-sm font-normal">
+                            {threat.severity}
+                          </div>
+                        )}
+                      </div>
                     </TableCell>
-                    <TableCell className="text-gray-400 text-sm md:text-base">{threat.description || '-'}</TableCell>
+                    <TableCell className="text-gray-400 text-sm md:text-base">
+                      {formatDate(threat.first_seen)}
+                    </TableCell>
+                    <TableCell className="text-gray-400 text-sm md:text-base">
+                      {threat.source || '-'}
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow className="border-gray-800 hover:bg-gray-800/30 transition-colors duration-200">
-                  <TableCell colSpan={4} className="h-24 text-center text-gray-400 text-sm md:text-base">
+                  <TableCell colSpan={5} className="h-24 text-center text-gray-400 text-sm md:text-base">
                     No matching threats found
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
+        </div>
+        
+        {/* Pagination and Results Count */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-4 text-sm text-gray-400">
+          <div>
+            Showing {filteredThreats.length} of {threats.length} indicators
+          </div>
+          <div className="mt-2 sm:mt-0">
+            Data source: AlienVault OTX
+          </div>
         </div>
       </CardContent>
     </Card>

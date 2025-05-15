@@ -39,15 +39,18 @@ const severityColors: Record<string, Color> = {
   'Low': 'emerald'
 };
 
-// Custom color map for threat types
-const typeColorsMap: Record<string, string> = {
+// Custom color map for threat types - updated based on API data
+const typeColorsMap: Record<string, Color> = {
   domain: "indigo",
-  ipv4: "teal",
-  url: "blue",
-  hash: "violet",
+  IPv4: "cyan",
+  URL: "blue",
   email: "purple",
+  hostname: "violet",
+  "FileHash-MD5": "amber",
+  "FileHash-SHA256": "orange",
+  CVE: "rose",
   // fallback for others
-  default: "gray"
+  default: "slate"
 };
 
 // Animation variants
@@ -121,16 +124,21 @@ export default function ThreatCharts({ threats = [], className }: ThreatChartsPr
     <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-6", className)}>
       {/* Donut Chart for Threat Types */}
       <Card className="bg-gray-900 border-gray-800 shadow-md shadow-black/10 p-6 relative overflow-hidden">
-        <Title className="text-lg font-medium text-white mb-4">Threat Types Distribution</Title>
-        <div className="relative h-[250px]">
+        <div className="flex flex-col space-y-1">
+          <Title className="text-lg font-medium text-white">Threat Types Distribution</Title>
+          <Text className="text-xs text-gray-400">Breakdown of threat indicators by type</Text>
+        </div>
+        
+        <div className="relative h-[250px] mt-4">
           <DonutChart
             data={typeData}
             category="count"
             index="name"
-            colors={Object.values(typeColorsMap) as Color[]}
+            colors={typeData.map(d => typeColorsMap[d.name] || typeColorsMap.default)}
             className="h-full w-full text-white"
             showAnimation
             animationDuration={800}
+            valueFormatter={(value) => `${value} (${((value / threats.length) * 100).toFixed(1)}%)`}
             noDataText="No data available"
           />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -139,36 +147,70 @@ export default function ThreatCharts({ threats = [], className }: ThreatChartsPr
             </span>
           </div>
         </div>
-        <Legend
-          categories={typeData.map(d => d.name)}
-          colors={typeData.map(d => typeColorsMap[d.name.toLowerCase()] || typeColorsMap.default) as Color[]}
-          className="mt-4 text-gray-300"
-        />
-      </Card>
-      
-      {/* Bar Chart for Threat Severity */}
-      <Card className="bg-gray-900 border-gray-800 shadow-md shadow-black/10 p-6 relative overflow-hidden">
-        <Title className="text-lg font-medium text-white mb-4">Threat Severity Levels</Title>
-        <div className="relative h-[250px]">
-          <BarChart
-            data={severityData}
-            index="severity"
-            categories={severityOrder}
-            colors={['rose', 'amber', 'yellow', 'emerald'] as Color[]}
-            valueFormatter={(value) => value.toString()}
-            yAxisWidth={40}
-            className="h-full text-white"
-            showAnimation
-            animationDuration={800}
-            noDataText="No data available"
+        
+        <div className="mt-4 max-h-[120px] overflow-y-auto pr-2 custom-scrollbar">
+          <Legend
+            categories={typeData.map(d => `${d.name} (${d.count})`)}
+            colors={typeData.map(d => typeColorsMap[d.name] || typeColorsMap.default)}
+            className="text-gray-300 text-sm"
           />
         </div>
-        <Legend
-          categories={severityOrder}
-          colors={['rose', 'amber', 'yellow', 'emerald'] as Color[]}
-          className="mt-4 text-gray-300"
-        />
-        <Text className="mt-2 text-gray-400 text-sm">Higher severity indicates greater potential impact</Text>
+      </Card>
+      
+      {/* Threat Stats Card */}
+      <Card className="bg-gray-900 border-gray-800 shadow-md shadow-black/10 p-6 relative overflow-hidden">
+        <div className="flex flex-col space-y-1">
+          <Title className="text-lg font-medium text-white">Threat Intelligence Summary</Title>
+          <Text className="text-xs text-gray-400">Key metrics and severity breakdown</Text>
+        </div>
+        
+        {/* Threat Stats Grid */}
+        <div className="grid grid-cols-2 gap-4 mt-6">
+          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center">
+            <div className="text-3xl font-bold text-white">{threats.length}</div>
+            <div className="text-sm text-gray-400 mt-1">Total Indicators</div>
+          </div>
+          
+          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center">
+            <div className="text-3xl font-bold text-white">{typeData.length}</div>
+            <div className="text-sm text-gray-400 mt-1">Unique Types</div>
+          </div>
+          
+          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center">
+            <div className="text-3xl font-bold text-emerald-400">
+              {severityData.find(d => d.severity === 'Low')?.["Low"] || 0}
+            </div>
+            <div className="text-sm text-gray-400 mt-1">Low Severity</div>
+          </div>
+          
+          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 flex flex-col items-center justify-center">
+            <div className="text-3xl font-bold text-amber-400">
+              {severityData.find(d => d.severity === 'Medium')?.["Medium"] || 0}
+            </div>
+            <div className="text-sm text-gray-400 mt-1">Medium Severity</div>
+          </div>
+        </div>
+        
+        {/* Top Threat Types */}
+        <div className="mt-6">
+          <Text className="text-sm font-medium text-white mb-3">Top Threat Types</Text>
+          <div className="space-y-2">
+            {typeData.slice(0, 4).map((type, index) => (
+              <div key={index} className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div 
+                    className="w-3 h-3 rounded-full mr-2" 
+                    style={{ backgroundColor: `var(--tremor-${typeColorsMap[type.name] || typeColorsMap.default}-500)` }}
+                  />
+                  <Text className="text-sm text-gray-300">{type.name}</Text>
+                </div>
+                <Text className="text-sm text-gray-400">{type.count}</Text>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <Text className="mt-6 text-gray-400 text-xs">Data refreshed: {new Date().toLocaleString()}</Text>
       </Card>
     </div>
   );
