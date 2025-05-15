@@ -1,38 +1,44 @@
-import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
-import "./globals.css";
-import { cn } from "@/lib/utils";
+import './globals.css';
+import { type Metadata } from 'next';
+import { type ReactNode } from 'react';
+import { Inter } from 'next/font/google';
+import { cn } from '@/lib/utils';
+import { Toaster } from '@/components/ui/toaster';
 
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Cyber Threat Intelligence Dashboard",
-  description: "A modern dashboard for analyzing and visualizing cyber threat intelligence data",
+  title: 'CTI Dashboard',
+  description: 'Cyber Threat Intelligence Dashboard',
   icons: {
-    icon: "/favicon.ico",
+    icon: '/favicon.ico',
   },
+  authors: [
+    {
+      name: "CTI Dashboard Team",
+    },
+  ],
+  themeColor: [{ media: "(prefers-color-scheme: dark)", color: "#09090b" }],
 };
 
 interface RootLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <head />
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
+      <body className={cn(
+        inter.className,
+        'min-h-screen bg-gray-950 text-white antialiased'
+      )}>
         <div className="relative flex min-h-screen flex-col">
-          <div className="flex-1">{children}</div>
+          <div className="mx-auto w-full max-w-7xl p-4 md:p-6 lg:p-8">
+            {children}
+          </div>
         </div>
+        <Toaster />
       </body>
     </html>
   );

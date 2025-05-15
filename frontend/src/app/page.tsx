@@ -1,27 +1,66 @@
 'use client';
 
-import { Header } from '@/components/ui/header';
-import ThreatTable from '@/components/ThreatTable';
-import ThreatCharts from '@/components/ThreatCharts';
+import { useState, useEffect } from 'react';
 import { mockThreats } from '@/data/mockThreats';
 
-export default function Home() {
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1">
-        <div className="container mx-auto py-6 space-y-8">
-          <div className="flex flex-col space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight">Threat Intelligence</h1>
-            <p className="text-muted-foreground">Monitor and analyze cyber threats in real-time.</p>
-          </div>
+// Import components from centralized UI index
+import { 
+  Header,
+  DashboardLayout, 
+  DashboardHeader, 
+  DashboardSection,
+  DashboardLoadingState
+} from '@/components/ui';
 
-          <div className="grid gap-6">
-            <ThreatCharts threats={mockThreats} />
-            <ThreatTable threats={mockThreats} />
-          </div>
-        </div>
-      </main>
-    </div>
+// Import main components
+import ThreatTable from '@/components/ThreatTable';
+import ThreatCharts from '@/components/ThreatCharts';
+
+export default function Home() {
+  const [loading, setLoading] = useState(true);
+  const [threats, setThreats] = useState(mockThreats);
+
+  // Simulate data loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <>
+      <Header />
+      <DashboardLayout>
+        {loading ? (
+          // Show loading state
+          <DashboardLoadingState />
+        ) : (
+          // Show dashboard content
+          <>
+            <DashboardHeader 
+              title="Threat Intelligence" 
+              description="Monitor and analyze cyber threats in real-time with our advanced visualization dashboard."
+              className="animate-in fade-in duration-500"
+            />
+            
+            <DashboardSection>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                <ThreatCharts 
+                  threats={threats} 
+                  className="animate-in fade-in duration-700 slide-in-from-bottom-4 col-span-1 md:col-span-2" 
+                />
+              </div>
+              
+              <ThreatTable 
+                threats={threats} 
+                className="animate-in fade-in duration-700 delay-200 slide-in-from-bottom-4" 
+              />
+            </DashboardSection>
+          </>
+        )}
+      </DashboardLayout>
+    </>
   );
 }

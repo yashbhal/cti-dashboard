@@ -14,10 +14,51 @@
   }
 }
 
+html.dark {
+  color-scheme: dark;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Tremor dark mode overrides */
+.dark .tremor-background-muted {
+  background-color: #1f2937 !important;
+}
+
+.dark .tremor-border {
+  border-color: #374151 !important;
+}
+
+.dark .tremor-content-emphasis {
+  color: #e5e7eb !important;
+}
+
+.dark .tremor-content-strong {
+  color: #f9fafb !important;
+}
+
+.dark .tremor-content {
+  color: #d1d5db !important;
+}
+
+.dark .tremor-content-subtle {
+  color: #9ca3af !important;
+}
+
+.dark .tremor-background-subtle {
+  background-color: #1f2937 !important;
+}
+
+.dark .tremor-background-emphasis {
+  background-color: #1f2937 !important;
+}
+
+.dark .tremor-ring {
+  border-color: #374151 !important;
 }
 
 @layer utilities {

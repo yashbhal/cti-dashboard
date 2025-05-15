@@ -3,7 +3,7 @@ import { ThreatIndicator } from '@/types/threat';
 export const mockThreats: ThreatIndicator[] = [
   {
     indicator: 'malicious.example.com',
-    type: 'domain',
+    type: 'Domain',
     first_seen: '2025-05-14T10:00:00Z',
     severity: 'Critical',
     tags: ['phishing', 'malware', 'botnet', 'c2'],
@@ -35,7 +35,7 @@ export const mockThreats: ThreatIndicator[] = [
   },
   {
     indicator: 'badfile.exe',
-    type: 'file',
+    type: 'File',
     first_seen: '2025-05-14T11:20:00Z',
     severity: 'High',
     tags: ['ransomware', 'trojan'],
@@ -43,10 +43,58 @@ export const mockThreats: ThreatIndicator[] = [
   },
   {
     indicator: 'malware.example.net',
-    type: 'domain',
+    type: 'Domain',
     first_seen: '2025-05-13T09:10:00Z',
     severity: 'Low',
     tags: ['suspicious', 'adware'],
+    source: 'AlienVault OTX'
+  },
+  {
+    indicator: 'evil-corp.com',
+    type: 'Domain',
+    first_seen: '2025-05-14T12:30:00Z',
+    severity: 'Critical',
+    tags: ['phishing', 'malware'],
+    source: 'AlienVault OTX'
+  },
+  {
+    indicator: '10.20.30.40',
+    type: 'IPv4',
+    first_seen: '2025-05-14T13:15:00Z',
+    severity: 'Medium',
+    tags: ['scanner'],
+    source: 'AlienVault OTX'
+  },
+  {
+    indicator: 'http://malware-host.net/payload.zip',
+    type: 'URL',
+    first_seen: '2025-05-14T14:00:00Z',
+    severity: 'High',
+    tags: ['malware', 'exploit'],
+    source: 'AlienVault OTX'
+  },
+  {
+    indicator: 'ransomware.bin',
+    type: 'File',
+    first_seen: '2025-05-14T14:45:00Z',
+    severity: 'Critical',
+    tags: ['ransomware'],
+    source: 'AlienVault OTX'
+  },
+  {
+    indicator: 'malicious-script.js',
+    type: 'File',
+    first_seen: '2025-05-14T15:30:00Z',
+    severity: 'Medium',
+    tags: ['malware', 'javascript'],
+    source: 'AlienVault OTX'
+  },
+  {
+    indicator: 'spam-campaign.org',
+    type: 'Domain',
+    first_seen: '2025-05-14T16:15:00Z',
+    severity: 'Low',
+    tags: ['spam', 'phishing'],
     source: 'AlienVault OTX'
   },
   {
