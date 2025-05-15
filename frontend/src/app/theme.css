@@ -1,0 +1,290 @@
+/* Theme variables for both light and dark modes */
+
+:root {
+  /* Base colors */
+  --background: #09090b;
+  --foreground: #f8fafc;
+  
+  /* Card and container backgrounds */
+  --card-bg: #0f1015;
+  --card-hover-bg: #13141a;
+  
+  /* Text colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  /* Accent colors */
+  --primary: #818cf8;
+  --primary-hover: #a5b4fc;
+  --secondary: #c084fc;
+  --secondary-hover: #d8b4fe;
+  
+  /* Status colors */
+  --critical: #ef4444;
+  --critical-bg: rgba(239, 68, 68, 0.1);
+  --critical-border: rgba(239, 68, 68, 0.3);
+  
+  --high: #f97316;
+  --high-bg: rgba(249, 115, 22, 0.1);
+  --high-border: rgba(249, 115, 22, 0.3);
+  
+  --medium: #eab308;
+  --medium-bg: rgba(234, 179, 8, 0.1);
+  --medium-border: rgba(234, 179, 8, 0.3);
+  
+  --low: #22c55e;
+  --low-bg: rgba(34, 197, 94, 0.1);
+  --low-border: rgba(34, 197, 94, 0.3);
+  
+  /* Border colors */
+  --border: #1f2937;
+  --border-hover: #374151;
+  
+  /* Input colors */
+  --input-bg: #111318;
+  --input-border: #1f2937;
+  --input-placeholder: #4b5563;
+  
+  /* Chart colors */
+  --chart-color-1: #818cf8;
+  --chart-color-2: #c084fc;
+  --chart-color-3: #38bdf8;
+  --chart-color-4: #34d399;
+  --chart-color-5: #fb923c;
+  --chart-color-6: #f472b6;
+}
+
+.light {
+  /* Base colors */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  
+  /* Card and container backgrounds */
+  --card-bg: #ffffff;
+  --card-hover-bg: #f1f5f9;
+  --card-border: #e2e8f0;
+  --card-hover-border: rgba(79, 70, 229, 0.3);
+  --card-shadow: rgba(0, 0, 0, 0.05);
+  --card-hover-shadow: rgba(0, 0, 0, 0.1);
+  
+  /* Text colors */
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  
+  /* Accent colors */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-foreground: #ffffff;
+  --primary-light: rgba(79, 70, 229, 0.1);
+  
+  --secondary: #9333ea;
+  --secondary-hover: #7e22ce;
+  --secondary-foreground: #ffffff;
+  --secondary-light: rgba(147, 51, 234, 0.1);
+  
+  /* Status colors - more readable in light mode */
+  --critical: #dc2626;
+  --critical-bg: rgba(220, 38, 38, 0.1);
+  --critical-border: rgba(220, 38, 38, 0.3);
+  
+  --high: #ea580c;
+  --high-bg: rgba(234, 88, 12, 0.1);
+  --high-border: rgba(234, 88, 12, 0.3);
+  
+  --medium: #ca8a04;
+  --medium-bg: rgba(202, 138, 4, 0.1);
+  --medium-border: rgba(202, 138, 4, 0.3);
+  
+  --low: #16a34a;
+  --low-bg: rgba(22, 163, 74, 0.1);
+  --low-border: rgba(22, 163, 74, 0.3);
+  
+  /* Border colors */
+  --border: #e2e8f0;
+  --border-hover: #cbd5e1;
+  
+  /* Input colors */
+  --input-bg: #f8fafc;
+  --input-border: #e2e8f0;
+  --input-placeholder: #94a3b8;
+  --ring: rgba(79, 70, 229, 0.2);
+  
+  /* Chart colors - softer but still readable in light mode */
+  --chart-color-1: #4f46e5;
+  --chart-color-2: #9333ea;
+  --chart-color-3: #0ea5e9;
+  --chart-color-4: #10b981;
+  --chart-color-5: #f59e0b;
+  --chart-color-6: #ec4899;
+  
+  /* Grid and background */
+  --grid-color: rgba(79, 70, 229, 0.05);
+  --bg-glow-1: rgba(79, 70, 229, 0.05);
+  --bg-glow-2: rgba(147, 51, 234, 0.05);
+}
+
+/* Dark mode overrides */
+.dark {
+  /* Base colors */
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  
+  /* Card and container colors */
+  --card-bg: #1e1b4b;
+  --card-border: #312e81;
+  --card-hover-border: rgba(99, 102, 241, 0.4);
+  --card-shadow: rgba(0, 0, 0, 0.3);
+  --card-hover-shadow: rgba(0, 0, 0, 0.5);
+  
+  /* Accent colors */
+  --primary: #818cf8;
+  --primary-hover: #6366f1;
+  --primary-foreground: #ffffff;
+  --primary-light: rgba(129, 140, 248, 0.2);
+  
+  /* Secondary accent */
+  --secondary: #c084fc;
+  --secondary-hover: #a855f7;
+  --secondary-foreground: #ffffff;
+  --secondary-light: rgba(192, 132, 252, 0.2);
+  
+  /* Status colors - more vibrant for dark mode */
+  --critical: #ef4444;
+  --critical-bg: rgba(239, 68, 68, 0.2);
+  --critical-border: rgba(239, 68, 68, 0.3);
+  
+  --high: #f97316;
+  --high-bg: rgba(249, 115, 22, 0.2);
+  --high-border: rgba(249, 115, 22, 0.3);
+  
+  --medium: #eab308;
+  --medium-bg: rgba(234, 179, 8, 0.2);
+  --medium-border: rgba(234, 179, 8, 0.3);
+  
+  --low: #22c55e;
+  --low-bg: rgba(34, 197, 94, 0.2);
+  --low-border: rgba(34, 197, 94, 0.3);
+  
+  /* Text colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  
+  /* Border colors */
+  --border: #312e81;
+  --border-hover: rgba(99, 102, 241, 0.4);
+  
+  /* Chart colors */
+  --chart-color-1: #818cf8;
+  --chart-color-2: #c084fc;
+  --chart-color-3: #38bdf8;
+  --chart-color-4: #22d3ee;
+  --chart-color-5: #2dd4bf;
+  --chart-color-6: #a78bfa;
+  
+  /* Utility colors */
+  --ring: rgba(129, 140, 248, 0.3);
+  --input-border: #312e81;
+  --input-bg: #1e1b4b;
+  --input-placeholder: #64748b;
+  
+  /* Grid and background */
+  --grid-color: rgba(99, 102, 241, 0.05);
+  --bg-glow-1: rgba(99, 102, 241, 0.1);
+  --bg-glow-2: rgba(192, 132, 252, 0.1);
+}
+
+/* Apply theme variables to elements */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.card-bg {
+  background-color: var(--card-bg);
+  border-color: var(--card-border);
+  box-shadow: 0 4px 6px var(--card-shadow);
+}
+
+.card-bg:hover {
+  border-color: var(--card-hover-border);
+  box-shadow: 0 10px 15px var(--card-hover-shadow);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.border-theme {
+  border-color: var(--border);
+}
+
+.border-theme:hover {
+  border-color: var(--border-hover);
+}
+
+/* Status badge styles */
+.status-critical {
+  color: var(--critical);
+  background-color: var(--critical-bg);
+  border-color: var(--critical-border);
+}
+
+.status-high {
+  color: var(--high);
+  background-color: var(--high-bg);
+  border-color: var(--high-border);
+}
+
+.status-medium {
+  color: var(--medium);
+  background-color: var(--medium-bg);
+  border-color: var(--medium-border);
+}
+
+.status-low {
+  color: var(--low);
+  background-color: var(--low-bg);
+  border-color: var(--low-border);
+}
+
+/* Theme-aware gradient text */
+.gradient-text {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Grid background */
+.grid-bg {
+  background-image: linear-gradient(
+    to right,
+    var(--grid-color) 1px,
+    transparent 1px
+  ),
+  linear-gradient(
+    to bottom,
+    var(--grid-color) 1px,
+    transparent 1px
+  );
+}
+
+/* Subtle glows */
+.bg-glow-1 {
+  background-color: var(--bg-glow-1);
+}
+
+.bg-glow-2 {
+  background-color: var(--bg-glow-2);
+}
