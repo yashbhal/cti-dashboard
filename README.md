@@ -2,6 +2,8 @@
 
 ![Dashboard Preview](cti-dash-demo.gif)
 [the grid-filled look has shown up as part of the conversion from .mov to .gif, they don't exist on the web. this is just a quick visual of what it looks like deployed]
+
+
 A modern, full-stack web application that aggregates and visualizes Cyber Threat Intelligence (CTI) data from AlienVault OTX. Built with a professional dark-mode design focusing on usability, efficient data presentation, and subtle animations for an enhanced user experience.
 
 ## Getting Started
