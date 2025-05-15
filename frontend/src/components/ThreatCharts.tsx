@@ -40,13 +40,18 @@ const severityColors = {
 };
 
 // Custom color map for threat types
-const typeColors = [
-  colors.chartPink,
-  colors.chartCyan,
-  colors.chartGreen,
-  colors.chartPurple,
-  colors.chartOrange
-];
+const typeColorsMap: Record<string, string> = {
+  domain: "blue",
+  ipv4: "teal",
+  url: "amber",
+  hash: "violet",
+  email: "lime",
+  // fallback for others
+  default: "cyan"
+};
+// For Legend and DonutChart, map type order to color
+const typeColors = (typeData: { name: string }[]) =>
+  typeData.map(item => typeColorsMap[item.name.toLowerCase()] || typeColorsMap.default);
 
 // Animation variants
 const cardVariants = {
@@ -123,8 +128,8 @@ export default function ThreatCharts({ threats = [], className }: ThreatChartsPr
           <div className="mt-6">
             <Legend
               categories={typeData.map(item => item.name)}
-              colors={typeColors}
-              className="mb-6 font-mono text-sm tracking-wide bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-lime-400 text-transparent bg-clip-text drop-shadow-[0_0_6px_#00fff7]"
+              colors={typeColors(typeData)}
+              className="mb-6 font-mono text-base tracking-wide text-white drop-shadow-[0_0_5px_#00fff7]"
             />
             <div className="rounded-lg bg-[#2d1f3f]/90 p-4 ring-1 ring-purple-500/30 shadow-lg shadow-purple-500/20">
               <div className="text-white/70 mb-4 font-mono text-sm">Distribution of different threat types detected</div>
@@ -134,8 +139,8 @@ export default function ThreatCharts({ threats = [], className }: ThreatChartsPr
                   category="value"
                   index="name"
                   valueFormatter={(value) => `${value.toString()} threats`}
-                  colors={["cyan", "fuchsia", "violet", "lime", "indigo"]}
-                  className="h-[300px] mt-4"
+                  colors={typeColors(typeData)}
+                  className="h-[300px] mt-4 [&_.recharts-label]:!fill-white [&_.recharts-label]:!font-bold [&_.recharts-label]:!drop-shadow-[0_0_4px_#00fff7]"
                   showAnimation={true}
                   animationDuration={1000}
                   label="Total Threats"
@@ -144,7 +149,7 @@ export default function ThreatCharts({ threats = [], className }: ThreatChartsPr
                   onValueChange={(v) => console.log(v)}
                   customTooltip={({ payload }) => (
                     <div className="p-2 bg-[#1a1a1a] border border-[#333] rounded-lg shadow-xl">
-                      <div className="text-white font-mono">
+                      <div className="text-white font-mono font-bold drop-shadow-[0_0_4px_#00fff7]">
                         {payload?.[0]?.payload?.name}: {payload?.[0]?.value} threats
                       </div>
                     </div>
@@ -176,7 +181,7 @@ export default function ThreatCharts({ threats = [], className }: ThreatChartsPr
                   categories={['Number of Threats']}
                   colors={["fuchsia", "cyan", "lime", "violet"]}
                   valueFormatter={(value) => `${value.toString()} threats`}
-                  className="h-[300px] mt-4"
+                  className="h-[300px] mt-4 [&_.recharts-label]:!fill-white [&_.recharts-label]:!font-bold [&_.recharts-label]:!drop-shadow-[0_0_4px_#00fff7]"
                   showAnimation={true}
                   animationDuration={1000}
                   showLegend={true}
@@ -188,7 +193,7 @@ export default function ThreatCharts({ threats = [], className }: ThreatChartsPr
                   onValueChange={(v) => console.log(v)}
                   customTooltip={({ payload }) => (
                     <div className="p-2 bg-[#1a1a1a] border border-[#333] rounded-lg shadow-xl">
-                      <div className="text-white font-mono">
+                      <div className="text-white font-mono font-bold drop-shadow-[0_0_4px_#00fff7]">
                         {payload?.[0]?.payload?.name}: {payload?.[0]?.value} threats
                       </div>
                     </div>
